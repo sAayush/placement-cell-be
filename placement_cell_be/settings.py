@@ -67,11 +67,7 @@ LINKEDIN_REDIRECT_URI = "http://localhost:8000/accounts/linkedin/callback"
 LINKEDIN_CLIENT_ID = os.environ.get('LINKEDIN_CLIENT_ID')
 LINKEDIN_CLIENT_SECRET = os.environ.get('LINKEDIN_CLIENT_SECRET')
 
-LINKEDIN_SCOPES = [
-    'profile',
-    'email',
-    'openid'
-]
+
 
 ROOT_URLCONF = "placement_cell_be.urls"
 

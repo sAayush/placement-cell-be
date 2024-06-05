@@ -1,10 +1,12 @@
 import jwt
 import requests
+
+from .models import Profile
 from .forms import SignUpForm
 from django.conf import settings
 from django.db import transaction
 from urllib.parse import urlencode
-from .models import Profile
+from django.contrib.auth import logout
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate
@@ -121,3 +123,11 @@ def linkedin_callback(request):
         return redirect('home')
           
     return render(request, 'accounts/login.html', {'error': 'Authentication failed'})
+
+def logout_view(request):
+    return render(request, 'accounts/logout.html')
+
+def logout_confirm_view(request):
+    logout(request)
+    return redirect('login')
+
