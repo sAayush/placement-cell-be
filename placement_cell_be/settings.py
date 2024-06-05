@@ -44,12 +44,13 @@ INSTALLED_APPS = [
 ]
 
 EXTERNAL_APPS = [
-    'rest_framework',
     'accounts',
     'home',
     'jobs',
     'utils',
 ]
+
+INSTALLED_APPS += EXTERNAL_APPS
 
 
 MIDDLEWARE = [
@@ -60,6 +61,16 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+]
+
+LINKEDIN_REDIRECT_URI = "http://localhost:8000/accounts/linkedin/callback"
+LINKEDIN_CLIENT_ID = os.environ.get('LINKEDIN_CLIENT_ID')
+LINKEDIN_CLIENT_SECRET = os.environ.get('LINKEDIN_CLIENT_SECRET')
+
+LINKEDIN_SCOPES = [
+    'profile',
+    'email',
+    'openid'
 ]
 
 ROOT_URLCONF = "placement_cell_be.urls"
