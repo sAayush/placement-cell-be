@@ -81,13 +81,13 @@ def linkedin_callback(request):
         email = decoded_id_token.get('email')
         picture = decoded_id_token.get('picture')
 
-        print('decoded_id_token:', decoded_id_token)
-        print('sub:', sub)
-        print('name:', name)
-        print('given_name:', given_name)
-        print('family_name:', family_name)
-        print('email:', email)
-        print('picture:', picture)
+        # print('decoded_id_token:', decoded_id_token)
+        # print('sub:', sub)
+        # print('name:', name)
+        # print('given_name:', given_name)
+        # print('family_name:', family_name)
+        # print('email:', email)
+        # print('picture:', picture)
         
         # Fetch user profile information from LinkedIn
         userinfo_response = requests.get(
@@ -97,8 +97,8 @@ def linkedin_callback(request):
         userinfo_data = userinfo_response.json()
         locale = userinfo_data.get('locale')
         
-        print('userinfo_data:', userinfo_data)
-        print('locale:', locale)
+        # print('userinfo_data:', userinfo_data)
+        # print('locale:', locale)
         
 
         # Create or update user in the database
@@ -116,7 +116,7 @@ def linkedin_callback(request):
             profile.email = email
             profile.locale = locale
             # profile.headline = headline
-            profile.picture = picture
+            profile.profile_photo = picture
             profile.save()   
         
         login(request, user)

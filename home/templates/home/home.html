@@ -1,43 +1,33 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            background-color: #f8f9fa;
-            padding-top: 40px;
-        }
-        .container {
-            max-width: 600px;
-            margin: auto;
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        .user-info {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        .user-info img {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            margin-right: 10px;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="user-info">
-            <img src="{{ user.profile.picture }}" alt="Profile Picture">
-            <h2>Hello, {{ user.profile.name }}</h2>
-        </div>
-        <a href="{% url 'logout' %}" class="btn btn-danger">Logout</a>
+{% extends 'home/base.html' %}
+
+{% block title %}
+    Home
+{% endblock %}
+
+{% block content %}
+<div class="jumbotron">
+    <h1 class="display-4">Welcome to Placement cell!</h1>
+    <p class="lead">This is a simple home page built using Bootstrap.</p>
+    <hr class="my-4">
+    <p>It features some random content to showcase Bootstrap's capabilities.</p>
+    <a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a>
+  </div>
+  
+  <div class="row">
+    <div class="col-md-4">
+      <h2>Feature 1</h2>
+      <p>This is some random content for feature 1. It could be anything you want.</p>
+      <p><a class="btn btn-secondary" href="#" role="button">View details &raquo;</a></p>
     </div>
-</body>
-</html>
+    <div class="col-md-4">
+      <h2>Feature 2</h2>
+      <p>This is some random content for feature 2. It could be anything you want.</p>
+      <p><a class="btn btn-secondary" href="#" role="button">View details &raquo;</a></p>
+    </div>
+    <div class="col-md-4">
+      <h2>Feature 3</h2>
+      <p>This is some random content for feature 3. It could be anything you want.</p>
+      <p><a class="btn btn-secondary" href="#" role="button">View details &raquo;</a></p>
+    </div>
+  </div>
+{% endblock %}
