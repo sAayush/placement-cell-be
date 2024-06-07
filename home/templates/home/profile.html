@@ -1,43 +1,17 @@
+<!-- templates/home/profile.html -->
 {% extends 'home/base.html' %}
 
-{% block title %}
-    Profile
-{% endblock %}
-
 {% block content %}
-<div class="container">
-    <h1 class="mt-5 mb-4">User Profile</h1>
-    <div class="row">
-        <div class="col-md-6">
-            <h2>Personal Information</h2>
-            <form method="post">
-                {% csrf_token %}
-                {{ user_form.as_p }}
-                <button type="submit" class="btn btn-primary">Update Profile</button>
-            </form>
-        </div>
-        <div class="col-md-6">
-            <h2>Additional Information</h2>
-            <form method="post">
-                {% csrf_token %}
-                {{ profile_form.as_p }}
-                <h2>Education Information</h2>
-                {{ formset.management_form }}
-                {% for form in formset %}
-                    {{ form.as_p }}
-                {% endfor %}
-                <button type="submit" class="btn btn-primary">Update Additional Information</button>
-            </form>
-            <button type="button" class="btn btn-secondary" id="add-more-education">Add More Education</button>
-        </div>
-    </div>
+<div class="container mt-4">
+    <h2>Update Profile</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ profile_form.as_p }}
+        {{ education_formset.management_form }}
+        {% for form in education_formset %}
+            {{ form.as_p }}
+        {% endfor %}
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+    </form>
 </div>
-
-<script>
-document.getElementById('add-more-education').addEventListener('click', function() {
-    const formIdx = document.querySelectorAll('.form-row').length;
-    const formTemplate = document.getElementById('empty-form').innerHTML.replace(/__prefix__/g, formIdx);
-    document.querySelector('.form-set').insertAdjacentHTML('beforeend', formTemplate);
-});
-</script>
 {% endblock %}

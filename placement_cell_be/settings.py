@@ -91,15 +91,14 @@ WSGI_APPLICATION = "placement_cell_be.wsgi.application"
 
 
 # Database
-# https://docs.djangoproject.com/en/5.0/ref/settings/#databases
-
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": os.environ.get('DB_NAME'),
-        "PORT": 5432,
         "USER": os.environ.get('DB_USER'),
         "PASSWORD": os.environ.get('DB_PASSWORD'),
+        "HOST": 'localhost',
+        "PORT": '5432',
     }
 }
 
