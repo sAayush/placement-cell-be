@@ -4,8 +4,8 @@ from accounts.models import Profile
 
 class Education(models.Model):
     class EducationLevel(models.TextChoices):
-        SSC = '10th', 'SSC'
-        HSC = 'HSC', 'HSC'
+        TENTH = '10th', '10th'
+        TWELFTH = '12th', '12th'
         BACHELORS = 'Bachelors', 'Bachelors'
         MASTERS = 'Masters', 'Masters'
         PHD = 'PhD', 'PhD'
@@ -15,4 +15,8 @@ class Education(models.Model):
     marks_or_cgpa = models.FloatField()
     year_of_passing = models.DateField()
     board_or_university = models.CharField(max_length=255)
-    degree = models.CharField(max_length=255, null=True, blank=True)
+    degree = models.CharField(max_length=255)
+    
+    
+    def __str__(self):
+        return self.degree + ' - ' + self.profile.name

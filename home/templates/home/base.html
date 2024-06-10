@@ -1,3 +1,4 @@
+<!-- templates/home/base.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,6 +6,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}My Website{% endblock %}</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <style>
+        .profile-initials {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
 
@@ -31,12 +44,18 @@
 
     </ul>
     <div class="navbar-nav ml-auto">
-        <!-- Here you can place the user's profile picture and name -->
-        <!-- Example: -->
-        <a class="nav-item nav-link" href="#">
-            <img src="{{ user.profile.picture }}" alt="Profile Picture" class="rounded-circle" width="30" height="30">
-            {{ user.first_name }}
-        </a>
+        {% if user.is_authenticated %}
+            <a class="nav-item nav-link" href="#">
+                {% if user.profile.profile_photo %}
+                    <img src="{{ user.profile.profile_photo.url }}" alt="Profile Picture" class="rounded-circle" width="30" height="30">
+                {% else %}
+                    <div class="profile-initials" style="background-color: #{{ user.profile.color_code }};">
+                        {{ user.first_name|slice:":1" }}{{ user.last_name|slice:":1" }}
+                    </div>
+                {% endif %}
+                {{ user.first_name }}
+            </a>
+        {% endif %}
     </div>
   </div>
 </nav>

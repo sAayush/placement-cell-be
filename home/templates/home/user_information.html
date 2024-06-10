@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Information</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .info {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>User Information</h1>
+    <div class="info">
+        <strong>Name:</strong> {{ user.profile.name }}
+    </div>
+    <div class="info">
+        <strong>Email:</strong> {{ user.profile.email }}
+    </div>
+    <div class="info">
+        <strong>Locale:</strong> {{ user.profile.locale }}
+    </div>
+    <div class="info">
+        <strong>Headline:</strong> {{ user.profile.headline }}
+    </div>
+    <div class="info">
+        <strong>Date of Birth:</strong> {{ user.profile.date_of_birth }}
+    </div>
+    <div class="info">
+        <strong>Address:</strong> {{ user.profile.address }}
+    </div>
+    <div class="info">
+        <strong>Phone Number:</strong> {{ user.profile.phone_number }}
+    </div>
+    <div class="info">
+        <strong>Education:</strong>
+        <ul>
+            {% for education in user.profile.educations.all %}
+            <li>{{ education.level }}: {{ education.degree }} at {{ education.board_or_university }}, {{ education.year_of_passing.year }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>

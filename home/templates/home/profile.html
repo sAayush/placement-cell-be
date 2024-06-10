@@ -1,17 +1,102 @@
 <!-- templates/home/profile.html -->
 {% extends 'home/base.html' %}
 
+{% block title %}
+Profile
+{% endblock %}
+
 {% block content %}
 <div class="container mt-4">
     <h2>Update Profile</h2>
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        {{ profile_form.as_p }}
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                Name:
+                {{ profile_form.name }}
+            </div>
+            <div class="form-group col-md-6">
+                Email:
+                {{ profile_form.email }}
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                Locale:
+                {{ profile_form.locale }}
+            </div>
+            <div class="form-group col-md-6">
+                Headline:
+                {{ profile_form.headline }}
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                Date of Birth:
+                {{ profile_form.date_of_birth }}
+            </div>
+            <div class="form-group col-md-6">
+                Address:
+                {{ profile_form.address }}
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                Phone Number:
+                {{ profile_form.phone_number }}
+            </div>
+            <div class="form-group col-md-6">
+                Profile Photo:
+                {{ profile_form.profile_photo }}
+            </div>
+        </div>
+
+        <h3>Education</h3>
         {{ education_formset.management_form }}
         {% for form in education_formset %}
-            {{ form.as_p }}
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    Level:
+                    {{ form.level }}
+                </div>
+                <div class="form-group col-md-6">
+                    Marks or CGPA:
+                    {{ form.marks_or_cgpa }}
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    Year of Passing:
+                    {{ form.year_of_passing }}
+                </div>
+                <div class="form-group col-md-6">
+                    Board or University:
+                    {{ form.board_or_university }}
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-12">
+                    Degree:
+                    {{ form.degree }}
+                </div>
+            </div>
         {% endfor %}
+        <button type="button" id="add-education" class="btn btn-secondary mb-3">Add Education</button>
+        <a href="{% url 'generate_pdf' %}" class="btn btn-primary">Download Information (PDF)</a>
         <button type="submit" class="btn btn-primary">Save Changes</button>
     </form>
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const addEducationButton = document.getElementById('add-education');
+        const educationFieldsContainer = document.getElementById('education-fields');
+        
+        addEducationButton.addEventListener('click', function() {
+            const educationFields = document.querySelectorAll('.education-field');
+            const lastEducationField = educationFields[educationFields.length - 1];
+            const newEducationField = lastEducationField.cloneNode(true);
+            educationFieldsContainer.appendChild(newEducaationField);
+        });
+    });
+    </script>
 {% endblock %}
