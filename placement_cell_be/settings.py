@@ -68,6 +68,14 @@ LINKEDIN_REDIRECT_URI = "http://localhost:8000/accounts/linkedin/callback"
 LINKEDIN_CLIENT_ID = os.environ.get('LINKEDIN_CLIENT_ID')
 LINKEDIN_CLIENT_SECRET = os.environ.get('LINKEDIN_CLIENT_SECRET')
 
+# Static files (CSS, JavaScript, Images)
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+]
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+
+# Media files (Uploaded files)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
