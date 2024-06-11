@@ -1,37 +1,29 @@
+from django.utils.translation import gettext as _
 from django.contrib.auth.base_user import BaseUserManager
 
 
 class CustomUserManager(BaseUserManager):
+    """
+    Custom user model manager where email is the unique identifier
+    for authentication instead of usernames.
+    """
 
-    def create_user(self, phone_number, username,name, password=None, **extra_fields):
-        if not phone_number:
-            raise ValueError("Phone number is required")
-
-        if not username:
-            raise ValueError("Username is required")
-        if not name:
-            raise ValueError("Name is required")
-
-        extra_fields['email']=self.normalize_email(extra_fields['email'])
-        user=self.model(phone_number=phone_number,
-                        username=username,
-                        name=name,
-                        **extra_fields
-                        )
+    def create_user(self, email, password, **extra_fields):
+        if not email:
+            raise ValueError(_("Users must have an email address"))
+        email = self.normalize_email(email)
+        user = self.model(email=email, **extra_fields)
         user.set_password(password)
-        user.save(using=self.db)
+        user.save()
         return user
 
-
-    def create_superuser(self, phone_number,username,name, password=None, **extra_fields):
-        extra_fields.setdefault('is_staff', True)
-        extra_fields.setdefault('is_superuser', True)
-        extra_fields.setdefault('is_active', True)
+    def create_superuser(self, email, password, **extra_fields):
+        extra_fields.setdefault("is_staff", True)
+        extra_fields.setdefault("is_superuser", True)
+        extra_fields.setdefault("is_active", True)
 
         if extra_fields.get("is_staff") is not True:
-            raise ValueError(("Superuser must have is_staff=True"))
-        
+            raise ValueError(_("Superuser must have is_staff=True."))
         if extra_fields.get("is_superuser") is not True:
-            raise ValueError(("Superuser must have is_superuser=True"))
-        
-        return  self.create_user(phone_number,username,name, password, **extra_fields)
+            raise ValueError(_("Superuser must have is_superuser=True."))
+        return self.create_user(email, password, **extra_fields)

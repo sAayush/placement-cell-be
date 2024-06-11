@@ -1,20 +1,37 @@
-from django.db import models
+from rest_framework.authtoken.models import Token
 
+from django.db import models
+from django.utils.translation import gettext as _
 from django.contrib.auth.models import AbstractUser
-# Create your models here.
+
 from .managers import CustomUserManager
 
-class CustomUser(AbstractUser):
-    email=models.EmailField()
-    name=models.CharField(max_length=100)
-    phone_number=models.CharField(max_length=20, unique=True)
-    about=models.TextField(max_length=100, null=True, blank=True)
-    username=models.CharField(max_length=50, unique=False, null=True, blank=True)
-    
-    USERNAME_FIELD='phone_number'
-    REQUIRED_FIELD=["username","email", "name"]
+# Create your models here.
 
-    objects=CustomUserManager()
+
+class CustomUser(AbstractUser):
+    email = models.EmailField(_("Email Address"), unique=True)
+    name = models.CharField(_("Full Name"), max_length=20, default="Guest")
+    phone_number = models.CharField(_("Contact Number"), max_length=15)
+
+    username = models.CharField(max_length=150, blank=True, null=True, unique=True)
+
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = ("username",)
+
+    objects = CustomUserManager()
 
     def __str__(self):
-        return self.name
+        return self.email
+
+
+class CustomGoogleTokenComposite(models.Model):
+    user = models.OneToOneField(
+        CustomUser, on_delete=models.CASCADE, related_name="google_token"
+    )
+    access_token = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
+    token = models.OneToOneField(
+        Token, on_delete=models.CASCADE, related_name="google_token"
+    )
+    refresh_token = models.CharField(max_length=255, null=True, blank=True)

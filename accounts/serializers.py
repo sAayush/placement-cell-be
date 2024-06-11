@@ -1,54 +1,58 @@
-from .models import CustomUser
 from rest_framework import serializers
-from django.contrib.auth import get_user_model
-from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.authtoken.models import Token
+
+from django.core.exceptions import ValidationError
+from django.contrib.auth.password_validation import validate_password
+
+from .models import CustomUser
 
 
-User = get_user_model()
-
-class UserSignUpSerializer(serializers.ModelSerializer):
-    password1=serializers.CharField(write_only=True)
-    password2=serializers.CharField(write_only=True)
+class UserLoginSerializer(serializers.ModelSerializer):
+    token = serializers.SerializerMethodField()
+    last_login = serializers.DateTimeField(read_only=True)
+    last_modified = serializers.DateTimeField(read_only=True)
 
     class Meta:
-        model=User
-        fields=('phone_number', 'email','username', 'name', 'password1', 'password2')
+        model = CustomUser
+        fields = ("token", "id", "name", "email", "last_login", "last_modified")
+        extra_kwargs = {"password": {"write_only": True}}
 
-    def validate(self, attrs):
-        password1=attrs.get('password1')
-        password2=attrs.get('password2')
-        if password1!=password2:
-            raise serializers.ValidationError("Passwords don't match")
-        return attrs
+    @staticmethod
+    def get_token(user):
+        token, created = Token.objects.get_or_create(user=user)
+        return token.key
+
+    @staticmethod
+    def get_team(self):
+        return self.team
+
+
+class UserGetSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        exclude = ["password"]
+
+
+class UserSignupSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ["email", "name", "phone_number", "password"]
+        extra_kwargs = {"password": {"write_only": True}}
+
+    def validate_password(self, data):
+        try:
+            validate_password(data)
+        except ValidationError as e:
+            raise serializers.ValidationError({"password": list(e.messages)})
+        return data
 
     def create(self, validated_data):
-        user=User.objects.create_user(phone_number=validated_data['phone_number'], 
-                                      email=validated_data['email'],
-                                      username=validated_data['username'],
-                                      name=validated_data['name'],
-                                      password=validated_data['password1']
-                                      )
+        validated_data["username"] = validated_data["email"]  # Use email as username
+        user = CustomUser.objects.create_user(
+            email=validated_data["email"],
+            password=validated_data["password"],
+            name=validated_data.get("name", ""),
+            phone_number=validated_data.get("phone_number", ""),
+            username=validated_data["email"],  # Ensure username is set
+        )
         return user
-    
-
-
-
-class UserSignInSerializer(serializers.Serializer):
-  phone_number=serializers.CharField()
-  password=serializers.CharField()
-
-  def validate(self, attrs):
-    phone_number=attrs.get('phone_number')
-    password=attrs.get('password')
-    user=User.objects.filter(phone_number=phone_number).first()
-    if not user or not user.check_password(password):
-      raise serializers.ValidationError("Invalid credentials")
-    return attrs
-
-  def create(self, validated_data):
-    user = User.objects.get(phone_number=validated_data['phone_number'])
-    refresh = RefreshToken.for_user(user)
-    return {
-      'refresh': str(refresh),
-      'access': str(refresh.access_token),
-    }
