@@ -63,12 +63,12 @@
               width="30"
               height="30" />
             {% else %}
-            <div class="profile-initials" style="background-color: #{{ user.profile.color_code }};">
-              {{ user.first_name|slice:":1" }}{{ user.last_name|slice:":1" }}
-            </div>
-            {% endif %} {{ user.first_name }}
           </a>
-          {% endif %}
+
+          <div class="profile-initials" style="background-color: #{{ user.profile.color_code }};">
+            {{ user.first_name|slice:":1" }}{{ user.last_name|slice:":1" }}
+          </div>
+          {% endif %} {{ user.first_name }} {% endif %}
         </div>
       </div>
     </nav>

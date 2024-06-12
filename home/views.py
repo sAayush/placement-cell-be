@@ -13,11 +13,13 @@ from django.contrib.auth.decorators import login_required
 
 @login_required
 def home_view(request):
+    profile = Profile.objects.get(user=request.user)
     return render(request, 'home/home.html')
 
 
 @login_required
 def profile_view(request):
+    profile = Profile.objects.get(user=request.user)
     EducationFormSet = modelformset_factory(
         Education, form=EducationForm, extra=1, can_delete=True)
     profile_form = ProfileForm(
