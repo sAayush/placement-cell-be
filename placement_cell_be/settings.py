@@ -12,8 +12,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 import os
 from pathlib import Path
 
-from dotenv import load_dotenv
-
+from dotenv import load_dotenv 
 load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -31,7 +30,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
+AUTH_USER_MODEL = 'accounts.CustomUser'
 # Application definition
 
 INSTALLED_APPS = [
@@ -41,6 +40,9 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "accounts.apps.AccountsConfig",
+    "rest_framework",
+    "applicant",
 ]
 
 EXTERNAL_APPS = [
@@ -74,6 +76,7 @@ ROOT_URLCONF = "placement_cell_be.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
+        # "DIRS": [BASE_DIR / "templates"],
         "DIRS": [],
         "APP_DIRS": True,
         "OPTIONS": {
@@ -102,6 +105,8 @@ DATABASES = {
         "PASSWORD": os.environ.get('DB_PASSWORD'),
     }
 }
+
+
 
 
 # Password validation
