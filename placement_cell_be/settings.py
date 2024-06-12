@@ -62,6 +62,9 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+#########################################
+
+AUTH_USER_MODEL = 'accounts.CustomUser'
 
 LINKEDIN_REDIRECT_URI = "http://localhost:8000/accounts/linkedin/callback"
 LINKEDIN_CLIENT_ID = os.environ.get('LINKEDIN_CLIENT_ID')
@@ -78,6 +81,11 @@ STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+# redirect urls
+LOGIN_REDIRECT_URL = 'home'
+LOGOUT_REDIRECT_URL = 'login'
+
+#####################################
 
 ROOT_URLCONF = "placement_cell_be.urls"
 

@@ -7,11 +7,15 @@ from .forms import SignUpForm
 from django.conf import settings
 from django.db import transaction
 from urllib.parse import urlencode
-from django.contrib.auth import logout
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate
+from django.contrib.auth import views as auth_views
+from django.contrib.auth import logout, get_user_model
 from django.contrib.auth.forms import AuthenticationForm
+
+User = get_user_model()
+
 
 def signup_view(request):
     if request.method == 'POST':
@@ -19,14 +23,20 @@ def signup_view(request):
         if form.is_valid():
             user = form.save()
             Profile.objects.create(user=user)
-            username = form.cleaned_data.get('username')
+            email = form.cleaned_data.get('email')
             password = form.cleaned_data.get('password1')
-            user = authenticate(username=username, password=password)
+            user = authenticate(email=email, password=password)
             login(request, user)
             return redirect('home')
     else:
         form = SignUpForm()
     return render(request, 'accounts/signup.html', {'form': form})
+
+
+class CustomLoginView(auth_views.LoginView):
+    template_name = 'accounts/login.html'
+    redirect_authenticated_user = True
+
 
 def login_view(request):
     if request.method == 'POST':
@@ -34,13 +44,18 @@ def login_view(request):
         if form.is_valid():
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
-            user = authenticate(username=username, password=password)
+            user = authenticate(request, username=username, password=password)
             if user is not None:
                 login(request, user)
                 return redirect('home')
     else:
         form = AuthenticationForm()
     return render(request, 'accounts/login.html', {'form': form})
+
+
+def password_reset_view(request):
+    return render(request, 'accounts/password_reset.html')
+
 
 def linkedin_login(request):
     params = {
@@ -49,8 +64,10 @@ def linkedin_login(request):
         'redirect_uri': settings.LINKEDIN_REDIRECT_URI,
         'scope': 'profile email openid'
     }
-    url = 'https://www.linkedin.com/oauth/v2/authorization?' + urlencode(params)
+    url = 'https://www.linkedin.com/oauth/v2/authorization?' + \
+        urlencode(params)
     return redirect(url)
+
 
 def linkedin_callback(request):
     code = request.GET.get('code')
@@ -62,14 +79,16 @@ def linkedin_callback(request):
             'client_id': settings.LINKEDIN_CLIENT_ID,
             'client_secret': settings.LINKEDIN_CLIENT_SECRET,
         }
-        response = requests.post('https://www.linkedin.com/oauth/v2/accessToken', data=params)
+        response = requests.post(
+            'https://www.linkedin.com/oauth/v2/accessToken', data=params)
         access_token = response.json().get('access_token')
         id_token = response.json().get('id_token')  # Extract the ID token
 
         if not access_token or not id_token:
             return render(request, 'accounts/login.html', {'error': 'Authentication failed'})
 
-        decoded_id_token = jwt.decode(id_token, options={"verify_signature": False})
+        decoded_id_token = jwt.decode(
+            id_token, options={"verify_signature": False})
         email = decoded_id_token.get('email')
         given_name = decoded_id_token.get('given_name')
         family_name = decoded_id_token.get('family_name')
@@ -78,9 +97,11 @@ def linkedin_callback(request):
         locale = decoded_id_token.get('locale')
 
         with transaction.atomic():
-            user, created = User.objects.get_or_create(username=email, defaults={'first_name': given_name, 'last_name': family_name, 'email': email})
+            user, created = User.objects.get_or_create(email=email, defaults={
+                                                       'first_name': given_name, 'last_name': family_name, 'username': email})
             if created:
-                profile = Profile.objects.create(user=user, name=name, email=email, locale=locale, linkedin_photo_url=picture)
+                profile = Profile.objects.create(
+                    user=user, name=name, email=email, locale=locale, linkedin_photo_url=picture)
                 profile.download_linkedin_photo()
             else:
                 user.first_name = given_name
@@ -100,8 +121,10 @@ def linkedin_callback(request):
         return redirect('home')
     return render(request, 'accounts/login.html', {'error': 'Authentication failed'})
 
+
 def logout_view(request):
     return render(request, 'accounts/logout.html')
+
 
 def logout_confirm_view(request):
     logout(request)

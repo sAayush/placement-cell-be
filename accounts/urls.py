@@ -8,4 +8,5 @@ urlpatterns = [
     path('linkedin/callback/', linkedin_callback, name='linkedin_callback'),
     path('logout/', logout_view, name='logout'),
     path('logout_confirm/', logout_confirm_view, name='logout_confirm'),
+    path('password_reset/', password_reset_view, name='password_reset'),
 ]

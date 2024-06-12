@@ -1,69 +1,78 @@
 <!-- templates/home/base.html -->
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{% block title %}My Website{% endblock %}</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" />
     <style>
-        .profile-initials {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-            font-weight: bold;
-        }
+      .profile-initials {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-weight: bold;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="#">Placement Cell</a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarNav"
+        aria-controls="navbarNav"
+        aria-expanded="false"
+        aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="{% url 'home' %}"
+              >Home <span class="sr-only">(current)</span></a
+            >
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'profile' %}">Profile</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Settings</a>
+          </li>
 
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="#">Placement Cell</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse" id="navbarNav">
-    <ul class="navbar-nav ml-auto">
-      <li class="nav-item active">
-        <a class="nav-link" href="{% url 'home' %}">Home <span class="sr-only">(current)</span></a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'profile' %}">Profile</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Settings</a>
-      </li>
-      
-      <li class="nav-item">
-        <a class="nav-item nav-link" href="{% url 'logout' %}">Logout</a>
-      </li>
+          <li class="nav-item">
+            <a class="nav-item nav-link" href="{% url 'logout' %}">Logout</a>
+          </li>
+        </ul>
+        <div class="navbar-nav ml-auto">
+          {% if user.is_authenticated %}
+          <a class="nav-item nav-link" href="#">
+            {% if user.profile.profile_photo %}
+            <img
+              src="{{ user.profile.profile_photo.url }}"
+              alt="Profile Picture"
+              class="rounded-circle"
+              width="30"
+              height="30" />
+            {% else %}
+            <div class="profile-initials" style="background-color: #{{ user.profile.color_code }};">
+              {{ user.first_name|slice:":1" }}{{ user.last_name|slice:":1" }}
+            </div>
+            {% endif %} {{ user.first_name }}
+          </a>
+          {% endif %}
+        </div>
+      </div>
+    </nav>
 
-    </ul>
-    <div class="navbar-nav ml-auto">
-        {% if user.is_authenticated %}
-            <a class="nav-item nav-link" href="#">
-                {% if user.profile.profile_photo %}
-                    <img src="{{ user.profile.profile_photo.url }}" alt="Profile Picture" class="rounded-circle" width="30" height="30">
-                {% else %}
-                    <div class="profile-initials" style="background-color: #{{ user.profile.color_code }};">
-                        {{ user.first_name|slice:":1" }}{{ user.last_name|slice:":1" }}
-                    </div>
-                {% endif %}
-                {{ user.first_name }}
-            </a>
-        {% endif %}
-    </div>
-  </div>
-</nav>
-
-<div class="container">
-    {% block content %}
-    {% endblock %}
-</div>
-
-</body>
+    <div class="container"> {% block content %} {% endblock %} </div>
+  </body>
 </html>
