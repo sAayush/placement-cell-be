@@ -1,27 +1,17 @@
 {% extends 'home/base.html' %} {% block title %} Home {% endblock %} {% block content %}
 <div class="jumbotron">
-  <h1 class="display-4">Welcome to Placement cell!</h1>
-  <p class="lead">This is a simple home page built using Bootstrap.</p>
+  <h1 class="display-4">Welcome to Placement Cell!</h1>
+  <p class="lead">Find the latest job postings here.</p>
   <hr class="my-4" />
-  <p>It features some random content to showcase Bootstrap's capabilities.</p>
-  <a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a>
 </div>
 
 <div class="row">
+  {% for job in jobs %}
   <div class="col-md-4">
-    <h2>Feature 1</h2>
-    <p>This is some random content for feature 1. It could be anything you want.</p>
+    <h2>{{ job.title }}</h2>
+    <p>{{ job.description|truncatewords:30 }}</p>
     <p><a class="btn btn-secondary" href="#" role="button">View details &raquo;</a></p>
   </div>
-  <div class="col-md-4">
-    <h2>Feature 2</h2>
-    <p>This is some random content for feature 2. It could be anything you want.</p>
-    <p><a class="btn btn-secondary" href="#" role="button">View details &raquo;</a></p>
-  </div>
-  <div class="col-md-4">
-    <h2>Feature 3</h2>
-    <p>This is some random content for feature 3. It could be anything you want.</p>
-    <p><a class="btn btn-secondary" href="#" role="button">View details &raquo;</a></p>
-  </div>
+  {% endfor %}
 </div>
 {% endblock %}

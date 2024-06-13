@@ -48,6 +48,7 @@ EXTERNAL_APPS = [
     'home',
     'jobs',
     'utils',
+    'rest_framework',
 ]
 
 INSTALLED_APPS += EXTERNAL_APPS

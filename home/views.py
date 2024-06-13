@@ -1,12 +1,12 @@
 # home/views.py
 from xhtml2pdf import pisa
+from jobs.models import Job
 from .models import Education
-# Import custom user model if necessary
-from accounts.models import CustomUser, Profile
 from django.http import HttpResponse
+from django.shortcuts import render, redirect
 from django.forms import modelformset_factory
 from .forms import ProfileForm, EducationForm
-from django.shortcuts import render, redirect
+from accounts.models import CustomUser, Profile
 from django.template.loader import render_to_string
 from django.contrib.auth.decorators import login_required
 
@@ -14,7 +14,8 @@ from django.contrib.auth.decorators import login_required
 @login_required
 def home_view(request):
     profile = Profile.objects.get(user=request.user)
-    return render(request, 'home/home.html')
+    jobs = Job.objects.filter(is_active=True)
+    return render(request, 'home/home.html', {'jobs': jobs})
 
 
 @login_required
