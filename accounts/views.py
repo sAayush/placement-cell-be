@@ -1,4 +1,3 @@
-# accounts/views.py
 import jwt
 import requests
 
